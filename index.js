@@ -138,4 +138,4 @@ var request_notices=setInterval(() => {
 
 
     
-    app.listen(port,()=>{console.log("RUNNING")})
+    app.listen(port,()=>{console.log("RUNNING",{port})})
