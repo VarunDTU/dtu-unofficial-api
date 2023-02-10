@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const express = require('express');
 const { default: puppeteer } = require('puppeteer');
-
+const port=process.env.PORT||8000
 const app=express()
 var latest_news=[];
 var not=[]
@@ -138,4 +138,4 @@ var request_notices=setInterval(() => {
 
 
     
-    app.listen(8000,()=>{console.log("RUNNING")})
+    app.listen(port,()=>{console.log("RUNNING")})
