@@ -60,7 +60,7 @@ function web_scrapping(tab_id){
 
 async function get_user_info(id,password){
     const user_profile=[]
-    const browser=await puppeteer.launch()
+    const browser=await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] ,ignoreDefaultArgs: ['--disable-extensions']})
     const page=await browser.newPage()
     await page.goto("https://cumsdtu.in/student_dtu/login/login.jsp")
     
