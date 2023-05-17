@@ -1,28 +1,30 @@
 import puppeteer from "puppeteer"
 async function get_user_info(id,password){
+    console.log(id,password.length)
     const user_profile=[]
-    const browser=await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] ,ignoreDefaultArgs: ['--disable-extensions']})
+    const browser=await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'] ,ignoreDefaultArgs: ['--disable-extensions']})
     const page=await browser.newPage()
     await page.goto("https://cumsdtu.in/student_dtu/login/login.jsp")
-    
     await page.type("#usernameId",id)
     await page.type("#passwordId",password)
     console.log(id,password)
     
     await Promise.all([page.click("#loginBtnPnl"),page.waitForNavigation()])
-
     
-  
+    
+    
+    
     const page_url=page.url()
     console.log(page_url)
+    
     if(page_url=="https://cumsdtu.in/student_dtu/login/login.jsp"){
         await browser.close()
         return "wrong password or id"
     }
-    await page.screenshot({path:'p1.png'})
+  
     await Promise.all([page.click("#Link145"),page.waitForNavigation()])
     
-    await page.screenshot({path:'p2.png'})
+    
     var dob=await page.$eval("#Label597",el=>el.textContent)
     dob=dob.split('\n').join(' ')
     var Branch=await page.$eval("#Label613",el=>el.textContent)
