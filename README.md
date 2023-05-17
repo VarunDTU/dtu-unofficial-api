@@ -3,7 +3,7 @@
 
 This repository contains the source code for the DTU Unofficial API, a project that aims to provide a simple and easy-to-use interface for accessing various data and services from the Delhi Technological University (DTU). The API is built with Nodejs and express and uses web scraping and reverse engineering techniques to obtain information from DTU's official websites and applications. The API is not affiliated with or endorsed by DTU, and is intended for educational and research purposes only. Use it at your own risk and respect the terms and conditions of the original sources.
 
-Production [link](https://twitter.com/)
+Production [link](https://dtu-unofficial-api.up.railway.app/)
 
 
 
