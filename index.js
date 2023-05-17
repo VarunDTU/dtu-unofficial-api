@@ -93,15 +93,15 @@ app.get("/info/firstyear", (req, res) => {
   res.status(200).send(firstyears);
 });
 app.get("/", (req, res) => {
-  res.status(200).send("welcome to dtu-unoffical-api");
+  res.status(200).send("welcome to dtu-unoffical-api \n status:Active");
 });
-app.get("/user-info/:name/:password", async function (req, res) {
+app.get("/student-info/:name/:password", async function (req, res) {
   const name = req.params.name.replace(/_/g, "/");
 
   const password = decodeURI(req.params.password);
   console.log(password);
   if (name.length < 10 || password.length < 8) {
-    res.status(200).send("wrong id or password");
+    res.status(200).send("E:wrong id or password");
   }
   const ans = await get_user_info(name, password);
   res.status(200).send(ans);
