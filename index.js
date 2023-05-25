@@ -19,7 +19,7 @@ const address = "http://dtu.ac.in/";
 
 function web_scrapping(tab_id) {
   const notices = [];
-  axios(address).then((response) => {
+  axios(address,{timeout:30000}).then((response) => {
     const html = response.data;
     const data_html = cheerio.load(html);
     data_html(`#${tab_id} .latest_tab ul li`, html).each(async function () {
@@ -61,6 +61,7 @@ function web_scrapping(tab_id) {
 
     //console.log(notices)
   });
+  
   return notices;
 }
 
