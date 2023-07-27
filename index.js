@@ -94,7 +94,7 @@ app.get("/info/firstyear", (req, res) => {
   res.status(200).send(firstyears);
 });
 app.get("/", (req, res) => {
-  res.status(200).send("welcome to dtu-unoffical-api \n status:Active");
+  res.status(200).send(`<div>welcome to dtu-unoffical-api \n status:Active <a href="https://github.com/VarunDTU/dtu-unofficial-api">Docs<a></div>`);
 });
 app.get("/student-info/:name/:password", async function (req, res) {
   const name = req.params.name.replace(/_/g, "/");
