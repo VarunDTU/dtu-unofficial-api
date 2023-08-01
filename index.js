@@ -3,7 +3,7 @@ import * as cheerio from "cheerio";
 import express from "express";
 import get_user_info from "./Student_info.js";
 import Get_profesor_ids from "./Professor_info.js";
-import { addDoc, setDoc,doc } from "firebase/firestore";
+import { addDoc, setDoc, doc } from "firebase/firestore";
 import { db } from "./firebase.js";
 const port = process.env.PORT || 8000;
 const app = express();
@@ -19,7 +19,7 @@ const address = "http://dtu.ac.in/";
 
 function web_scrapping(tab_id) {
   const notices = [];
-  axios(address,{timeout:30000}).then((response) => {
+  axios(address, { timeout: 30000 }).then((response) => {
     const html = response.data;
     const data_html = cheerio.load(html);
     data_html(`#${tab_id} .latest_tab ul li`, html).each(async function () {
@@ -45,7 +45,7 @@ function web_scrapping(tab_id) {
             urls.push(url);
           }
         });
-       
+
       if (title != "") {
         notices.push({ title, date, urls });
         // if(tab_id==="tab4"){
@@ -56,26 +56,29 @@ function web_scrapping(tab_id) {
         //         links: urls
         //     });
         // }
-        }
+      }
     });
 
     //console.log(notices)
   });
-  
+
   return notices;
 }
 
-var request_notices = setInterval(() => {
+function request_notices() {
   latest_news = web_scrapping("tab4");
   not = web_scrapping("tab1");
   jobs = web_scrapping("tab2");
   tenders = web_scrapping("tab3");
   events = web_scrapping("tab5");
   firstyears = web_scrapping("tab8");
+}
+request_notices();
+setInterval(() => {
+  request_notices();
 }, 5000);
 
 app.get("/info/latestnews", async (req, res) => {
-    
   res.status(200).send(latest_news);
 });
 app.get("/info/notices", (req, res) => {
@@ -93,8 +96,13 @@ app.get("/info/events", (req, res) => {
 app.get("/info/firstyear", (req, res) => {
   res.status(200).send(firstyears);
 });
+
 app.get("/", (req, res) => {
-  res.status(200).send(`<div>welcome to dtu-unoffical-api \n status:Active <a href="https://github.com/VarunDTU/dtu-unofficial-api">Docs<a></div>`);
+  res
+    .status(200)
+    .send(
+      `<div>welcome to dtu-unoffical-api \n status:Active <a href="https://github.com/VarunDTU/dtu-unofficial-api">Docs<a></div>`
+    );
 });
 app.get("/student-info/:name/:password", async function (req, res) {
   const name = req.params.name.replace(/_/g, "/");
