@@ -5,6 +5,7 @@ import get_user_info from "./Student_info.js";
 import Get_profesor_ids from "./Professor_info.js";
 import { addDoc, setDoc, doc } from "firebase/firestore";
 import { db } from "./firebase.js";
+import cors from 'cors'
 const port = process.env.PORT || 8000;
 const app = express();
 var latest_news = [];
@@ -16,7 +17,7 @@ var test = [];
 var tenders = [];
 var firstyears = [];
 const address = "http://dtu.ac.in/";
-
+app.use(cors());
 function web_scrapping(tab_id) {
   const notices = [];
   axios(address, { timeout: 30000 }).then((response) => {
