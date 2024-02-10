@@ -62,7 +62,7 @@ function web_scrapping(tab_id) {
       //console.log(notices)
     })
     .catch((err) => {
-      return err;
+      return JSON.stringify(err);
     });
 
   return notices;
