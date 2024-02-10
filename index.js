@@ -14,7 +14,7 @@ var professor_id = [];
 var test = [];
 var tenders = [];
 var firstyears = [];
-const address = "http://dtu.ac.in/";
+const address = "http://www.dtu.ac.in/";
 app.use(cors());
 function web_scrapping(tab_id) {
   const notices = [];
@@ -64,7 +64,7 @@ function web_scrapping(tab_id) {
     .catch((err) => {
       return JSON.stringify(err);
     });
-
+  console.log(notices);
   return notices;
 }
 
