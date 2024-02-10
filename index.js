@@ -1,11 +1,9 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
+import cors from "cors";
 import express from "express";
-import get_user_info from "./Student_info.js";
 import Get_profesor_ids from "./Professor_info.js";
-import { addDoc, setDoc, doc } from "firebase/firestore";
-import { db } from "./firebase.js";
-import cors from 'cors'
+import get_user_info from "./Student_info.js";
 const port = process.env.PORT || 8000;
 const app = express();
 var latest_news = [];
@@ -20,48 +18,52 @@ const address = "http://dtu.ac.in/";
 app.use(cors());
 function web_scrapping(tab_id) {
   const notices = [];
-  axios(address, { timeout: 30000 }).then((response) => {
-    const html = response.data;
-    const data_html = cheerio.load(html);
-    data_html(`#${tab_id} .latest_tab ul li`, html).each(async function () {
-      const urls = [];
-      const title = data_html(this).find("h6 a").text();
+  axios(address, { timeout: 30000 })
+    .then((response) => {
+      const html = response.data;
+      const data_html = cheerio.load(html);
+      data_html(`#${tab_id} .latest_tab ul li`, html).each(async function () {
+        const urls = [];
+        const title = data_html(this).find("h6 a").text();
 
-      const date_string = data_html(this).find("small em i").text();
+        const date_string = data_html(this).find("small em i").text();
 
-      var parts = date_string.split(".");
-      var date = new Date(
-        parseInt(parts[2], 10),
-        parseInt(parts[1], 10) - 1,
-        parseInt(parts[0], 10)
-      );
+        var parts = date_string.split(".");
+        var date = new Date(
+          parseInt(parts[2], 10),
+          parseInt(parts[1], 10) - 1,
+          parseInt(parts[0], 10)
+        );
 
-      data_html(this)
-        .find("a")
-        .each(function () {
-          var url = data_html(this).attr("href");
+        data_html(this)
+          .find("a")
+          .each(function () {
+            var url = data_html(this).attr("href");
 
-          if (url) {
-            url = address + (url.slice(0, 0) + url.slice(1, url.length));
-            urls.push(url);
-          }
-        });
+            if (url) {
+              url = address + (url.slice(0, 0) + url.slice(1, url.length));
+              urls.push(url);
+            }
+          });
 
-      if (title != "") {
-        notices.push({ title, date, urls });
-        // if(tab_id==="tab4"){
+        if (title != "") {
+          notices.push({ title, date, urls });
+          // if(tab_id==="tab4"){
 
-        //     await setDoc(doc(db, "Notices",encodeURI(title.slice(0,5))), {
-        //         title: title,
-        //         date: date,
-        //         links: urls
-        //     });
-        // }
-      }
+          //     await setDoc(doc(db, "Notices",encodeURI(title.slice(0,5))), {
+          //         title: title,
+          //         date: date,
+          //         links: urls
+          //     });
+          // }
+        }
+      });
+
+      //console.log(notices)
+    })
+    .catch((err) => {
+      return err;
     });
-
-    //console.log(notices)
-  });
 
   return notices;
 }
