@@ -2,16 +2,14 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import cors from "cors";
 import express from "express";
-import Get_profesor_ids from "./Professor_info.js";
-import get_user_info from "./Student_info.js";
+import Get_profesor_ids from "./lib/Professor_info.js";
+import get_user_info from "./lib/Student_info.js";
 const port = process.env.PORT || 8000;
 const app = express();
 var latest_news = [];
 var not = [];
 var jobs = [];
 var events = [];
-var professor_id = [];
-var test = [];
 var tenders = [];
 var firstyears = [];
 const address = "http://www.dtu.ac.in/";
@@ -64,10 +62,9 @@ function web_scrapping(tab_id) {
     .catch((err) => {
       return JSON.stringify(err);
     });
-  console.log(notices);
+  //console.log(notices);
   return notices;
 }
-
 function request_notices() {
   latest_news = web_scrapping("tab4");
   not = web_scrapping("tab1");
@@ -100,18 +97,21 @@ app.get("/info/firstyear", (req, res) => {
   res.status(200).send(firstyears);
 });
 
-app.get("/", (req, res) => {
-  res
-    .status(200)
-    .send(
-      `<div>welcome to dtu-unoffical-api \n status:Active <a href="https://github.com/VarunDTU/dtu-unofficial-api">Docs<a></div>`
+app.get("/", async (req, res) => {
+  const status = (await axios(address, { timeout: 30000 })).status;
+  if (status) {
+    res.send(
+      `<div>welcome to dtu-unoffical-api \n status:${
+        status == 200 ? "Active" : `${address} inactive`
+      } <a href="https://github.com/VarunDTU/dtu-unofficial-api">Docs<a></div>`
     );
+  }
 });
 app.get("/student-info/:name/:password", async function (req, res) {
   const name = req.params.name.replace(/_/g, "/");
 
   const password = decodeURI(req.params.password);
-  console.log(password);
+
   if (name.length < 10 || password.length < 8) {
     res.status(200).send("E:wrong id or password");
   }
